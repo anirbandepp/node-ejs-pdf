@@ -165,7 +165,6 @@ const exportBufferPDF = (req, res) => {
                 format: 'Letter',
                 directory: "/tmp",
                 timeout: 540000,
-                "phantomPath": "./node_modules/phantomjs/bin/phantomjs",
                 "childProcessOptions": {
                     "detached": true
                 }
