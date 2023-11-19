@@ -162,43 +162,25 @@ const exportBufferPDF = (req, res) => {
         } else {
 
             let options = {
-                "height": "10.5in",
-                "width": "9in",
-                "paginationOffset": 1,
-                "header": {
-                    "height": "25mm",
-                    "contents": '<div style="text-align: center;">DELIVERY CHALLAN</div>'
-                },
-                "footer": {
-                    "height": "10mm",
-                    "contents": {
-                        first: '<div id="paginateId" style="text-align: center;">{{page}}/{{pages}}</div>',
-                        2: '<div style="text-align: center;">{{page}}/{{pages}}</div>',
-                        default: `<div style="text-align: center;" id="paginateId">
-                        <span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>
-                    </div>`,
-                        last: 'Last Page'
-                    }
-                },
+                format: 'Letter',
+                directory: "/tmp",
+                timeout: 540000,
+
             };
 
-            pdf.create(data, options, {
-                childProcessOptions: {
-                    env: {
-                        OPENSSL_CONF: '/dev/null',
-                    },
-                }
-            }).toBuffer(function (err, buffer) {
-                if (err) {
-                    console.log(err);
-                    res.json({ pdfErr: err });
-                } else {
-                    console.log(buffer)
-                    var pdfBuffer = new Buffer(buffer)
-                    res.setHeader('Content-disposition', 'inline; filename="test.pdf"');
-                    res.setHeader('Content-type', 'application/pdf');
-                    res.send(pdfBuffer)
-                }
+            return new Promise(function (resolve, reject) {
+                pdf.create(data, options).toBuffer(function (err, buffer) {
+                    if (err) {
+                        console.log(err);
+                        res.json({ pdfErr: err });
+                    } else {
+                        console.log(buffer)
+                        var pdfBuffer = new Buffer(buffer)
+                        res.setHeader('Content-disposition', 'inline; filename="test.pdf"');
+                        res.setHeader('Content-type', 'application/pdf');
+                        res.send(pdfBuffer)
+                    }
+                });
             });
         }
     });
