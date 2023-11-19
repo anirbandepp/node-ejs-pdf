@@ -141,22 +141,9 @@ const exportHTMLPDF = (req, res) => {
         const fileUniqueName = `users${new Date().getTime()}.pdf`;
 
         pdf.create(ejsData, options).toFile(fileUniqueName, (err, response) => {
-            if (err) throw err;
+            if (err) res.json({ err });
 
-            const filePath = path.resolve(__dirname, `../${fileUniqueName}`);
-
-            fs.readFile(filePath, (err, file) => {
-                if (err) {
-                    console.log(err);
-                    return res.status(500).send("could not download file");
-                }
-
-                res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', `attachment;filename=${fileUniqueName}`);
-
-                res.send(file);
-            });
-
+            return res.json({ response });
         });
 
     } catch (error) {
