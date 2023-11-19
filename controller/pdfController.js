@@ -141,11 +141,11 @@ const exportHTMLPDF = (req, res) => {
         const fileUniqueName = `users${new Date().getTime()}.pdf`;
 
         pdf.create(ejsData, options).toFile(fileUniqueName, (err, response) => {
-            if (err) {
-                return res.json(err);
-            } else {
-                return res.json({ response, fileUniqueName });
-            }
+            if (err) console.log(err);
+
+            console.log(response);
+
+            return res.json({ response })
         });
     } catch (error) {
         console.log(error);
