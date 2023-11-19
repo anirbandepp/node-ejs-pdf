@@ -1,6 +1,6 @@
 const users = require("../models/usersModel");
 const path = require('path');
-const puppeteer = require('puppeteer');
+// const puppeteer = require('puppeteer');
 const ejs = require('ejs');
 const fs = require('fs');
 
@@ -51,7 +51,7 @@ const createPDFPuppeteer = async (req, res, next) => {
     }
 };
 
-const exportUserPDF = async (req, res) => {
+const exportPuppeteerPDF = async (req, res) => {
 
     try {
 
@@ -60,8 +60,6 @@ const exportUserPDF = async (req, res) => {
         const fileUniqueName = `users${new Date().getTime()}.pdf`;
 
         const filePathName = path.resolve(__dirname, '../views/htmlToPdf.ejs');
-
-        const htmlString = fs.readFileSync(filePathName).toString();
 
         let browser = await puppeteer.launch();
         const [page] = await browser.pages();
@@ -107,8 +105,67 @@ const exportUserPDF = async (req, res) => {
     }
 };
 
+const exportHTMLPDF = (req, res) => {
+
+    try {
+
+        const data = { users };
+        const filePathName = path.resolve(__dirname, '../views/htmlToPdf.ejs');
+
+        const htmlString = fs.readFileSync(filePathName).toString();
+
+        let options = {
+            "height": "10.5in",
+            "width": "9in",
+            "paginationOffset": 1,
+            "header": {
+                "height": "25mm",
+                "contents": '<div style="text-align: center;">DELIVERY CHALLAN</div>'
+            },
+            "footer": {
+                "height": "10mm",
+                "contents": {
+                    first: '<div id="paginateId" style="text-align: center;">{{page}}/{{pages}}</div>',
+                    2: '<div style="text-align: center;">{{page}}/{{pages}}</div>',
+                    default: `<div style="text-align: center;" id="paginateId">
+                        <span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>
+                    </div>`,
+                    last: 'Last Page'
+                }
+            },
+        };
+
+        const ejsData = ejs.render(htmlString, data);
+
+        const fileUniqueName = `users${new Date().getTime()}.pdf`;
+
+        pdf.create(ejsData, options).toFile(fileUniqueName, (err, response) => {
+            if (err) throw err;
+
+            const filePath = path.resolve(__dirname, `../${fileUniqueName}`);
+
+            fs.readFile(filePath, (err, file) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send("could not download file");
+                }
+
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', `attachment;filename=${fileUniqueName}`);
+
+                res.send(file);
+            });
+
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     mainHTML,
     createPDFPuppeteer,
-    exportUserPDF
+    exportPuppeteerPDF,
+    exportHTMLPDF
 };

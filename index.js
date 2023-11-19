@@ -7,7 +7,7 @@ app.set('views', './views');
 
 app.use(express.static("public"));
 
-const { createPDFPuppeteer, mainHTML, exportUserPDF } = require('./controller/pdfController');
+const { createPDFPuppeteer, mainHTML, exportPuppeteerPDF, exportHTMLPDF } = require('./controller/pdfController');
 
 app.get("/", (req, res) => {
     res.send("I am a server, http://localhost:5000/create-user-pdf")
@@ -15,7 +15,8 @@ app.get("/", (req, res) => {
 
 app.get("/main-html", mainHTML);
 app.get("/create-pdf-puppeteer", createPDFPuppeteer);
-app.get("/create-user-pdf", exportUserPDF);
+// app.get("/create-puppeteer-pdf", exportPuppeteerPDF);
+app.get("/create-html-pdf", exportHTMLPDF);
 
 const start = async () => {
     try {
