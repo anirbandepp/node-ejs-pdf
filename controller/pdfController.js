@@ -182,7 +182,13 @@ const exportBufferPDF = (req, res) => {
                 },
             };
 
-            pdf.create(data, options).toBuffer(function (err, buffer) {
+            pdf.create(data, options, {
+                childProcessOptions: {
+                    env: {
+                        OPENSSL_CONF: '/dev/null',
+                    },
+                }
+            }).toBuffer(function (err, buffer) {
                 if (err) {
                     console.log(err);
                     res.json({ pdfErr: err });
