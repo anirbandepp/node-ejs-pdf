@@ -184,6 +184,7 @@ const exportBufferPDF = (req, res) => {
 
             pdf.create(data, options).toBuffer(function (err, buffer) {
                 if (err) {
+                    console.log(err);
                     res.json({ pdfErr: err });
                 } else {
                     console.log(buffer)
