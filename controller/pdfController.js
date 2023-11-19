@@ -152,9 +152,55 @@ const exportHTMLPDF = (req, res) => {
     }
 };
 
+const exportBufferPDF = (req, res) => {
+
+    const data = { users };
+
+    ejs.renderFile(path.join(__dirname, "../views/", "htmlToPdf.ejs"), { data: data }, (err, data) => {
+        if (err) {
+            res.send(err)
+        } else {
+
+            let options = {
+                "height": "10.5in",
+                "width": "9in",
+                "paginationOffset": 1,
+                "header": {
+                    "height": "25mm",
+                    "contents": '<div style="text-align: center;">DELIVERY CHALLAN</div>'
+                },
+                "footer": {
+                    "height": "10mm",
+                    "contents": {
+                        first: '<div id="paginateId" style="text-align: center;">{{page}}/{{pages}}</div>',
+                        2: '<div style="text-align: center;">{{page}}/{{pages}}</div>',
+                        default: `<div style="text-align: center;" id="paginateId">
+                        <span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>
+                    </div>`,
+                        last: 'Last Page'
+                    }
+                },
+            };
+
+            pdf.create(data, options).toBuffer(function (err, buffer) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    console.log(buffer)
+                    var pdfBuffer = new Buffer(buffer)
+                    res.setHeader('Content-disposition', 'inline; filename="test.pdf"');
+                    res.setHeader('Content-type', 'application/pdf');
+                    res.send(pdfBuffer)
+                }
+            });
+        }
+    });
+};
+
 module.exports = {
     mainHTML,
     createPDFPuppeteer,
     exportPuppeteerPDF,
-    exportHTMLPDF
+    exportHTMLPDF,
+    exportBufferPDF
 };
