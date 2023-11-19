@@ -143,8 +143,9 @@ const exportHTMLPDF = (req, res) => {
         pdf.create(ejsData, options).toFile(fileUniqueName, (err, response) => {
             if (err) {
                 return res.json(err);
+            } else {
+                return res, json({ response });
             }
-            console.log(response);
         });
     } catch (error) {
         console.log(error);
