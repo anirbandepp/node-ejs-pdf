@@ -158,7 +158,7 @@ const exportBufferPDF = (req, res) => {
 
     ejs.renderFile(path.join(__dirname, "../views/", "htmlToPdf.ejs"), { data: data }, (err, data) => {
         if (err) {
-            res.send(err)
+            res.json({ ejsErr: err });
         } else {
 
             let options = {
@@ -184,7 +184,7 @@ const exportBufferPDF = (req, res) => {
 
             pdf.create(data, options).toBuffer(function (err, buffer) {
                 if (err) {
-                    res.send(err);
+                    res.json({ pdfErr: err });
                 } else {
                     console.log(buffer)
                     var pdfBuffer = new Buffer(buffer)
