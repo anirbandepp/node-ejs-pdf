@@ -63,7 +63,7 @@ const exportUserPDF = async (req, res) => {
 
         const htmlString = fs.readFileSync(filePathName).toString();
 
-        let browser = await puppeteer.launch({ headless: "new" });
+        let browser = await puppeteer.launch();
         const [page] = await browser.pages();
 
         const html = await ejs.renderFile(filePathName, {
