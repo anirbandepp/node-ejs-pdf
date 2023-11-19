@@ -2,7 +2,6 @@ const users = require("../models/usersModel");
 const path = require('path');
 const puppeteer = require('puppeteer');
 const ejs = require('ejs');
-const pdf = require('html-pdf');
 const fs = require('fs');
 
 const mainHTML = async (req, res) => {
@@ -52,58 +51,56 @@ const createPDFPuppeteer = async (req, res, next) => {
     }
 };
 
-const exportUserPDF = (req, res) => {
+const exportUserPDF = async (req, res) => {
 
     try {
 
         const data = { users };
+
+        const fileUniqueName = `users${new Date().getTime()}.pdf`;
+
         const filePathName = path.resolve(__dirname, '../views/htmlToPdf.ejs');
 
         const htmlString = fs.readFileSync(filePathName).toString();
 
-        let options = {
-            "height": "10.5in",
-            "width": "9in",
-            "paginationOffset": 1,
-            "header": {
-                "height": "25mm",
-                "contents": '<div style="text-align: center;">DELIVERY CHALLAN</div>'
-            },
-            "footer": {
-                "height": "10mm",
-                "contents": {
-                    first: '<div id="paginateId" style="text-align: center;">{{page}}/{{pages}}</div>',
-                    2: '<div style="text-align: center;">{{page}}/{{pages}}</div>',
-                    default: `<div style="text-align: center;" id="paginateId">
-                        <span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>
-                    </div>`,
-                    last: 'Last Page'
-                }
-            },
-        };
+        let browser = await puppeteer.launch({ headless: "new" });
+        const [page] = await browser.pages();
 
-        const ejsData = ejs.render(htmlString, data);
-
-        const fileUniqueName = `users${new Date().getTime()}.pdf`;
-
-        pdf.create(ejsData, options).toFile(fileUniqueName, (err, response) => {
-            if (err) throw err;
-
-            const filePath = path.resolve(__dirname, `../${fileUniqueName}`);
-
-            fs.readFile(filePath, (err, file) => {
-                if (err) {
-                    console.log(err);
-                    return res.status(500).send("could not download file");
-                }
-
-                res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', `attachment;filename=${fileUniqueName}`);
-
-                res.send(file);
-            });
-
+        const html = await ejs.renderFile(filePathName, {
+            data
         });
+        await page.setContent(html);
+
+        const pdf = await page.pdf({
+            path: `generate-pdf/${fileUniqueName}`,
+            format: "A4"
+        });
+
+        const nodemailer = require('nodemailer');
+
+        var transporter = nodemailer.createTransport({
+            host: "sandbox.smtp.mailtrap.io",
+            port: 2525,
+            // secure: true,
+            auth: {
+                user: "631a07952c0a3a",
+                pass: "8bc03ff401deb1"
+            }
+        });
+
+        const info = await transporter.sendMail({
+            from: '<sender@example.com>',
+            to: ["anirbankreative22@gmail.com", "pathaksangita930@gmail.com"],
+            subject: "Test PDF Mail Send",
+            attachments: [
+                {
+                    filename: fileUniqueName,
+                    content: Buffer.from(pdf, 'utf-8')
+                }
+            ]
+        });
+
+        return res.json({ fileUniqueName, info });
 
     } catch (error) {
         console.log(error);
