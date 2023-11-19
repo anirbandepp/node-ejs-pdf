@@ -144,7 +144,7 @@ const exportHTMLPDF = (req, res) => {
             if (err) {
                 return res.json(err);
             } else {
-                return res, json({ response });
+                return res.json({ response, fileUniqueName });
             }
         });
     } catch (error) {
