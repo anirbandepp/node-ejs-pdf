@@ -74,7 +74,13 @@ const exportPuppeteerPDF = async (req, res) => {
         const pdfn = await page.pdf({
             path: `${path.join(__dirname, '../public/files', todayDate + ".pdf")}`,
             printBackground: true,
-            format: "A4"
+            format: "A4",
+            displayHeaderFooter: true,
+            footerTemplate: `<div style=\"text-align: right;width: 1000mm;font-size: 20px;\">
+                <span style=\"margin-right: 1cm\"><span class=\"pageNumber\"></span> 
+                of 
+                <span class=\"totalPages\"></span></span>
+            </div>`
         });
 
         await browser.close();
@@ -112,7 +118,7 @@ const exportPuppeteerPDF = async (req, res) => {
         });
 
         console.log(info);
-        return res.json({ info });
+        return res.json({ todayDate, info });
 
     } catch (error) {
         console.log(error);
