@@ -89,27 +89,29 @@ const exportPuppeteerPDF = async (req, res) => {
         const nodemailer = require('nodemailer');
 
         var transporter = nodemailer.createTransport({
-            host: "sandbox.smtp.mailtrap.io",
-            port: 2525,
-            // secure: true,
+            name: "DeliveryChallan",
+            host: "mail.iviewsense.com",
+            port: 465,
+            secure: true,
             auth: {
-                user: "631a07952c0a3a",
-                pass: "8bc03ff401deb1"
+                user: "anirban@iviewsense.com",
+                pass: "IDJWMmPNt#h"
             }
         });
 
         const info = await transporter.sendMail({
-            from: "anirbankreative22@gmail.com",
+            from: "anirban@iviewsense.com",
             to: ["pathaksangita930@gmail.com"],
             subject: "Test PDF Mail Send",
             attachments: [
                 {
-                    filename: "Test PDF",
+                    filename: "deliveryChallan.pdf",
                     content: Buffer.from(pdfn, 'utf-8')
                 }
             ]
         });
 
+        console.log(info);
         return res.json({ info });
 
     } catch (error) {
