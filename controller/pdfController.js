@@ -79,15 +79,38 @@ const exportPuppeteerPDF = async (req, res) => {
 
         await browser.close();
 
-        const pdfURL = path.join(__dirname, '../public/files', todayDate + ".pdf");
+        // const pdfURL = path.join(__dirname, '../public/files', todayDate + ".pdf");
+        // res.set({
+        //     "Content-Type": "application/pdf",
+        //     "Content-Length": pdfn.length
+        // });
+        // res.sendFile(pdfURL);
 
-        res.set({
-            "Content-Type": "application/pdf",
-            "Content-Length": pdfn.length
+        const nodemailer = require('nodemailer');
+
+        var transporter = nodemailer.createTransport({
+            host: "sandbox.smtp.mailtrap.io",
+            port: 2525,
+            // secure: true,
+            auth: {
+                user: "631a07952c0a3a",
+                pass: "8bc03ff401deb1"
+            }
         });
 
-        res.sendFile(pdfURL);
+        const info = await transporter.sendMail({
+            from: '<sender@example.com>',
+            to: ["anirbankreative22@gmail.com", "pathaksangita930@gmail.com"],
+            subject: "Test PDF Mail Send",
+            attachments: [
+                {
+                    filename: "Test",
+                    content: Buffer.from(pdfn, 'utf-8')
+                }
+            ]
+        });
 
+        return res.json({ info });
 
     } catch (error) {
         console.log(error);
