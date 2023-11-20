@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 
 app.get("/main-html", mainHTML);
 app.get("/create-pdf-puppeteer", createPDFPuppeteer);
-app.get("/create-puppeteer-pdf", exportPuppeteerPDF);
+app.get("/puppeteer-mailSend-pdf", exportPuppeteerPDF);
 app.get("/create-html-pdf", exportHTMLPDF);
 app.get("/export-buffer-pdf", exportBufferPDF);
 

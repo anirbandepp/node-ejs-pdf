@@ -99,12 +99,12 @@ const exportPuppeteerPDF = async (req, res) => {
         });
 
         const info = await transporter.sendMail({
-            from: '<sender@example.com>',
-            to: ["anirbankreative22@gmail.com", "pathaksangita930@gmail.com"],
+            from: "anirbankreative22@gmail.com",
+            to: ["pathaksangita930@gmail.com"],
             subject: "Test PDF Mail Send",
             attachments: [
                 {
-                    filename: "Test",
+                    filename: "Test PDF",
                     content: Buffer.from(pdfn, 'utf-8')
                 }
             ]
