@@ -58,8 +58,6 @@ const exportPuppeteerPDF = async (req, res) => {
 
         const data = { users };
 
-        const fileUniqueName = `users${new Date().getTime()}.pdf`;
-
         const filePathName = path.resolve(__dirname, '../views/htmlToPdf.ejs');
 
         let browser = await puppeteer.launch();
@@ -70,36 +68,26 @@ const exportPuppeteerPDF = async (req, res) => {
         });
         await page.setContent(html);
 
-        const pdf = await page.pdf({
-            path: `generate-pdf/${fileUniqueName}`,
+
+        const todayDate = new Date().getTime();
+
+        const pdfn = await page.pdf({
+            path: `${path.join(__dirname, '../public/files', todayDate + ".pdf")}`,
+            printBackground: true,
             format: "A4"
         });
 
-        const nodemailer = require('nodemailer');
+        await browser.close();
 
-        var transporter = nodemailer.createTransport({
-            host: "sandbox.smtp.mailtrap.io",
-            port: 2525,
-            // secure: true,
-            auth: {
-                user: "631a07952c0a3a",
-                pass: "8bc03ff401deb1"
-            }
+        const pdfURL = path.join(__dirname, '../public/files', todayDate + ".pdf");
+
+        res.set({
+            "Content-Type": "application/pdf",
+            "Content-Length": pdfn.length
         });
 
-        const info = await transporter.sendMail({
-            from: '<sender@example.com>',
-            to: ["anirbankreative22@gmail.com", "pathaksangita930@gmail.com"],
-            subject: "Test PDF Mail Send",
-            attachments: [
-                {
-                    filename: fileUniqueName,
-                    content: Buffer.from(pdf, 'utf-8')
-                }
-            ]
-        });
+        res.sendFile(pdfURL);
 
-        return res.json({ fileUniqueName, info });
 
     } catch (error) {
         console.log(error);
