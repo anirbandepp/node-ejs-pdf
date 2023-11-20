@@ -74,13 +74,7 @@ const exportPuppeteerPDF = async (req, res) => {
         const pdfn = await page.pdf({
             path: `${path.join(__dirname, '../public/files', todayDate + ".pdf")}`,
             printBackground: true,
-            format: "A4",
-            displayHeaderFooter: true,
-            footerTemplate: `<div style=\"text-align: right;width: 1000mm;font-size: 20px;\">
-                <span style=\"margin-right: 1cm\"><span class=\"pageNumber\"></span> 
-                of 
-                <span class=\"totalPages\"></span></span>
-            </div>`
+            format: "A4"
         });
 
         await browser.close();
@@ -96,7 +90,7 @@ const exportPuppeteerPDF = async (req, res) => {
 
         var transporter = nodemailer.createTransport({
             name: "DeliveryChallan",
-            host: "mail.iviewsense.com",
+            host: "http://mail.iviewsense.com",
             port: 465,
             secure: true,
             auth: {
@@ -111,14 +105,14 @@ const exportPuppeteerPDF = async (req, res) => {
             subject: "Test PDF Mail Send",
             attachments: [
                 {
-                    filename: "deliveryChallan.pdf",
+                    filename: "DeliveryChallan.pdf",
                     content: Buffer.from(pdfn, 'utf-8')
                 }
             ]
         });
 
         console.log(info);
-        return res.json({ todayDate, info });
+        return res.json({ info });
 
     } catch (error) {
         console.log(error);
