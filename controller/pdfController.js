@@ -1,6 +1,6 @@
 const users = require("../models/usersModel");
 const path = require('path');
-// const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer');
 const pdf = require('html-pdf');
 const ejs = require('ejs');
 const fs = require('fs');
