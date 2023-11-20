@@ -77,8 +77,7 @@ const exportPuppeteerPDF = async (req, res) => {
             format: "A4"
         });
 
-        await browser.close();
-
+        // await browser.close();
         // const pdfURL = path.join(__dirname, '../public/files', todayDate + ".pdf");
         // res.set({
         //     "Content-Type": "application/pdf",
@@ -90,7 +89,7 @@ const exportPuppeteerPDF = async (req, res) => {
 
         var transporter = nodemailer.createTransport({
             name: "DeliveryChallan",
-            host: "http://mail.iviewsense.com",
+            host: "mail.iviewsense.com",
             port: 465,
             secure: true,
             auth: {
