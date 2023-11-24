@@ -1,7 +1,7 @@
 const users = require("../models/usersModel");
 const path = require('path');
 const puppeteer = require('puppeteer');
-const pdf = require('html-pdf');
+const pdf = require('html-pdf-lts');
 const ejs = require('ejs');
 const fs = require('fs');
 
@@ -128,8 +128,7 @@ const exportHTMLPDF = (req, res) => {
         const htmlString = fs.readFileSync(filePathName).toString();
 
         let options = {
-            "height": "10.5in",
-            "width": "9in",
+            format: "A4",
             "paginationOffset": 1,
             "header": {
                 "height": "25mm",
