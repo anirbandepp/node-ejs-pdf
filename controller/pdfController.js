@@ -71,8 +71,8 @@ const exportPuppeteerPDF = async (req, res) => {
 
         const filePathName = path.resolve(__dirname, '../views/htmlToPdf.ejs');
 
-        let browser = await puppeteer.launch({ headless: false });
-        const page = await browser.newPage();
+        let browser = await puppeteer.launch();
+        const [page] = await browser.pages();
 
         const html = await ejs.renderFile(filePathName, {
             data
@@ -99,13 +99,13 @@ const exportPuppeteerPDF = async (req, res) => {
             margin: { bottom: '70px' },
         });
 
-        // await browser.close();
-        // const pdfURL = path.join(__dirname, '../public/files', todayDate + ".pdf");
-        // res.set({
-        //     "Content-Type": "application/pdf",
-        //     "Content-Length": pdfn.length
-        // });
-        // return res.sendFile(pdfURL);
+        await browser.close();
+        const pdfURL = path.join(__dirname, '../public/files', todayDate + ".pdf");
+        res.set({
+            "Content-Type": "application/pdf",
+            "Content-Length": pdfn.length
+        });
+        return res.sendFile(pdfURL);
 
         const nodemailer = require('nodemailer');
 
