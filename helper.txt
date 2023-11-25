@@ -1,0 +1,1 @@
+https://github.com/puppeteer/puppeteer/issues/5345
