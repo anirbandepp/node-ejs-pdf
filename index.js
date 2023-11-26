@@ -4,20 +4,16 @@ let PORT = process.env.PORT || 5000;
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
-
 app.use(express.static("public"));
 
-const { createPDFPuppeteer, mainHTML, exportPuppeteerPDF, exportHTMLPDF, exportBufferPDF } = require('./controller/pdfController');
+const puppeteerRoutes = require("./routes/puppeteer");
 
 app.get("/", (req, res) => {
     res.send("I am a server, http://localhost:5000/create-user-pdf")
 });
 
-app.get("/main-html", mainHTML);
-app.get("/create-pdf-puppeteer", createPDFPuppeteer);
-app.get("/puppeteer-mailSend-pdf", exportPuppeteerPDF);
-app.get("/create-html-pdf", exportHTMLPDF);
-app.get("/export-buffer-pdf", exportBufferPDF);
+//Routes of the APP
+app.use("/puppeteer", puppeteerRoutes);
 
 const start = async () => {
     try {
