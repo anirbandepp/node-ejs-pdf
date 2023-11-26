@@ -7,6 +7,7 @@ app.set('views', './views');
 app.use(express.static("public"));
 
 const puppeteerRoutes = require("./routes/puppeteer");
+const excelRoutes = require("./routes/excel");
 
 app.get("/", (req, res) => {
     res.send("I am a server, http://localhost:5000/create-user-pdf")
@@ -14,6 +15,7 @@ app.get("/", (req, res) => {
 
 //Routes of the APP
 app.use("/puppeteer", puppeteerRoutes);
+app.use("/exceljs", excelRoutes);
 
 const start = async () => {
     try {
