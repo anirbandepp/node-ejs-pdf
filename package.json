@@ -18,7 +18,8 @@
     "html-pdf-lts": "^2.2.7",
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.7",
-    "puppeteer": "^18.1.0"
+    "puppeteer": "^18.1.0",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
