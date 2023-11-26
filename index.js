@@ -11,7 +11,7 @@ const excelRoutes = require("./routes/excel");
 const requestRoutes = require("./routes/request");
 
 app.get("/", (req, res) => {
-    res.send("I am a server, http://localhost:5000/create-user-pdf")
+    res.sendFile(__dirname + './index.html');
 });
 
 //Routes of the APP
