@@ -25,7 +25,7 @@ const DeliveryChallan = async (req, res) => {
         const todayDate = new Date().getTime();
 
         const pdfn = await page.pdf({
-            path: `${path.join(__dirname, '../public/deliveryChallan', todayDate + ".pdf")}`,
+            path: `${path.join(__dirname, '../public/files', todayDate + ".pdf")}`,
             printBackground: true,
             format: "A4",
             displayHeaderFooter: true,
@@ -42,7 +42,7 @@ const DeliveryChallan = async (req, res) => {
         });
 
         await browser.close();
-        const pdfURL = path.join(__dirname, '../public/deliveryChallan', todayDate + ".pdf");
+        const pdfURL = path.join(__dirname, '../public/files', todayDate + ".pdf");
         res.set({
             "Content-Type": "application/pdf",
             "Content-Length": pdfn.length
