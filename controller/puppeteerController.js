@@ -42,7 +42,7 @@ const DeliveryChallan = async (req, res) => {
         });
 
         await browser.close();
-        const pdfURL = path.join(__dirname, '../public/files', todayDate + ".pdf");
+        const pdfURL = path.join(__dirname, '../public/deliveryChallan', todayDate + ".pdf");
         res.set({
             "Content-Type": "application/pdf",
             "Content-Length": pdfn.length
